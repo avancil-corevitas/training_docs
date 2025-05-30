@@ -1,0 +1,47 @@
+---
+title: "Package Versioning"
+format: 
+  html:
+    toc: true
+editor: source
+self-contained: true
+---
+
+## Motivation
+
+-   We want to provide stable, discrete versions of packages where users can install from to ensure stability and reproducibility
+
+## Semantic Versioning
+
+-   Also known as SemVer, [Semantic Versioning](https://semver.org/) is a universal approach to versioning software development projects (e.g. R packages) that allows for accurate tracking of development
+
+![Source: https://www.geeksforgeeks.org/introduction-semantic-versioning/](semver.png)
+
+- Generally, a first release will be 0.1.0 and the first major release comes at 1.0.0 once rapid development has paused and a stable product is ready
+
+
+## Best Practices
+
+### GitHub
+
+- Utilize [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) to denote versions
+  - Pair with pull requests to make more coherent, traceable releases
+
+- For minor and major releases, create branches titled the number of the release
+  - For example, when getting ready for 1.0.0 release, create a branch called "1.0.0" and merge development branches into 1.0.0 until ready for release. Then merge 1.0.0 into main and create a GitHub release for 1.0.0
+  
+- In the release notes, explain the major changes and anything that may change or break
+
+- A major release should be joined by a detailed readme or documentation release
+
+### Function Deprecation
+
+- The package [{lifecycle}](https://lifecycle.r-lib.org/articles/communicate.html) can be useful to express the status of a given function
+  - You can indicate three levels of [deprecation](https://lifecycle.r-lib.org/reference/deprecate_soft.html) for a function and direct users to an alternative 
+  - {lifecycle} can be initiated in a package with `usethis::use_lifecycle()`
+
+## Other Resources
+
+[versioning guidelines](https://combine-australia.github.io/r-pkg-dev/versioning.html)
+
+[blog post from R legend (and knitr creator) Yihui Xie](https://yihui.org/en/2013/06/r-package-versioning/)
