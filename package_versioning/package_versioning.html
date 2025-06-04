@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Package Versioning</title>
+<title>R Package Versioning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3004,7 +3004,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Package Versioning</h1>
+<h1 class="title">R Package Versioning</h1>
 </div>
 
 
@@ -3022,13 +3022,14 @@ vertical-align: -.125em;
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
 <ul>
-<li>We want to provide stable, discrete versions of packages where users can install from to ensure stability and reproducibility</li>
+<li>We want to provide stable, discrete versions of packages from which users can install to ensure stability and reproducibility</li>
 </ul>
 </section>
 <section id="semantic-versioning" class="level2">
 <h2 class="anchored" data-anchor-id="semantic-versioning">Semantic Versioning</h2>
 <ul>
-<li>Also known as SemVer, <a href="https://semver.org/">Semantic Versioning</a> is a universal approach to versioning software development projects (e.g. R packages) that allows for accurate tracking of development</li>
+<li><p>Also known as SemVer, <a href="https://semver.org/">Semantic Versioning</a> is a universal approach to versioning software development projects (e.g. R packages) that allows for accurate tracking of development</p></li>
+<li><p>Broken into three numbers, semantic versioning follows the format of <br><strong><em>major version</em>.<em>minor version</em>.<em>patch</em></strong></p></li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -3037,7 +3038,14 @@ vertical-align: -.125em;
 </figure>
 </div>
 <ul>
-<li>Generally, a first release will be 0.1.0 and the first major release comes at 1.0.0 once rapid development has paused and a stable product is ready</li>
+<li><p>The first number indicates a major version number. This version includes major changes to the package that are likely to break code from previous versions</p></li>
+<li><p>The second number indicates a minor version, which will be compatible with previous minor versions.</p>
+<ul>
+<li>An R package example could be adding an additional function without altering how previously released functions operate</li>
+</ul></li>
+<li><p>Lastly, the third number indicates the patch version. These are usually bug fixes and should always be compatible across the patch numbers</p></li>
+<li><p>Generally, a first release will be 0.1.0 and the first major release comes at 1.0.0 once rapid development has paused and a stable product is ready</p></li>
+<li><p>There’s no hard upper limit to each number, but if your minor versions begin to get very high, you may need to be mindful of compatibility within the major version you are still developing under (i.e. 1.17.0 is still compatible with 1.1.0)</p></li>
 </ul>
 </section>
 <section id="best-practices" class="level2">

@@ -1,5 +1,5 @@
 ---
-title: "Package Versioning"
+title: "R Package Versioning"
 format: 
   html:
     toc: true
@@ -9,15 +9,26 @@ self-contained: true
 
 ## Motivation
 
--   We want to provide stable, discrete versions of packages where users can install from to ensure stability and reproducibility
+-   We want to provide stable, discrete versions of packages from which users can install  to ensure stability and reproducibility
 
 ## Semantic Versioning
 
 -   Also known as SemVer, [Semantic Versioning](https://semver.org/) is a universal approach to versioning software development projects (e.g. R packages) that allows for accurate tracking of development
 
+- Broken into three numbers, semantic versioning follows the format of </br>***major version*.*minor version*.*patch***
+
 ![Source: https://www.geeksforgeeks.org/introduction-semantic-versioning/](semver.png)
 
+- The first number indicates a major version number. This version includes major changes to the package that are likely to break code from previous versions
+
+- The second number indicates a minor version, which will be compatible with previous minor versions. 
+    - An R package example could be adding an additional function without altering how previously released functions operate
+
+- Lastly, the third number indicates the patch version. These are usually bug fixes and should always be compatible across the patch numbers
+
 - Generally, a first release will be 0.1.0 and the first major release comes at 1.0.0 once rapid development has paused and a stable product is ready
+
+- There's no hard upper limit to each number, but if your minor versions begin to get very high, you may need to be mindful of compatibility within the major version you are still developing under (i.e. 1.17.0 is still compatible with 1.1.0)
 
 
 ## Best Practices
