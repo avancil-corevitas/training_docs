@@ -1,5 +1,5 @@
 ---
-name: Setup Code Issue
+name: Setup Code Issue (traditional)
 about: Submit a setup code issue log item
 title: ''
 labels: ''
