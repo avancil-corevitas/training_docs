@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Setup Code Issue
+about: setup code issue log
 title: ''
 labels: ''
 assignees: ''
