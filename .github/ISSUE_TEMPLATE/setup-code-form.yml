@@ -1,0 +1,48 @@
+name: Setup Code Issue
+description: Submit a setup code issue 
+title: ""
+labels: []
+assignees:
+type: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please be sure to fill out this form as accurately as possible and select a label for the relevant dataset
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+    validations:
+      required: false
+  - type: input
+    id: variables
+    attributes:
+      label: What variables are affected?
+    validations:
+      required: true
+  - type: input
+    id: subjects
+    attributes:
+      label: What subjects are affected?
+      placeholder: Sample subjects
+    validations:
+      required: true
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Relevant Dataset
+      options:
+        - Visits
+        - Exits
+        - Comorinf
+      default: 0
+    validations:
+      required: true
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Upload screenshots
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
