@@ -1,5 +1,5 @@
-name: Setup Code Issue
-description: Submit a setup code issue 
+name: Setup Code Issue (Form)
+description: Submit a setup code issue log item
 title: "Issue Log Item"
 body:
   - type: markdown
