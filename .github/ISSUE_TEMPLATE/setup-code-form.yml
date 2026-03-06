@@ -1,7 +1,6 @@
 name: Setup Code Issue
 description: Submit a setup code issue 
 title: "Issue Log Item []"
-type: bug
 body:
   - type: markdown
     attributes:
