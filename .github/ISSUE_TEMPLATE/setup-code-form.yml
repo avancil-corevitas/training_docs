@@ -41,7 +41,7 @@ body:
   - type: input
     id: other
     attributes:
-      label: Other/specify:
+      label: Other/specify
     validations:
       required: false
   - type: upload
