@@ -4,17 +4,32 @@ owner <- "avancil-corevitas"
 repo  <- "training_docs" 
 
 #open issues
-raw <- gh::gh(
+raw_open <- gh::gh(
   "/repos/{owner}/{repo}/issues",
   owner = owner, 
   repo = repo,
   state = "open",
   per_page = 100,
-  .limit = 5000   
+  .limit = 5000,
+  overwrite = TRUE
 )
 
-is_issue <- map_lgl(raw, ~ is.null(.x$pull_request))
-raw <- raw[is_issue]
+is_issue <- map_lgl(raw_open, ~ is.null(.x$pull_request))
+raw_open <- raw_open[is_issue]
+
+#get closed
+raw_closed <- gh::gh(
+  "/repos/{owner}/{repo}/issues",
+  owner = owner, 
+  repo = repo,
+  state = "closed",
+  per_page = 100,
+  .limit = 5000)
+
+is_issue <- map_lgl(raw_closed, ~ is.null(.x$pull_request))
+raw_closed <- raw_closed[is_issue]
+
+raw <- c(raw_open, raw_closed)
 
 
 extract_section <- function(body, heading) {
@@ -46,12 +61,16 @@ parse_issue_subjects <- function(body) {
   extract_section(body, "What subjects are affected?")
 }
 
+parse_issue_description <- function(body) {
+  extract_section(body, "Description")
+}
+
 parse_issue_dataset <- function(body) {
-  extract_section(body, "Relevant Dataset")
+  extract_section(body, "Analytic Dataset")
 }
 
 parse_issue_dataset_other <- function(body) {
-  extract_section(body, "Other/specify:")
+  extract_section(body, "Other/specify")
 }
 
 issues <- tibble(
@@ -70,9 +89,10 @@ issues <- tibble(
   }),
   dataset = map_chr(raw, ~ parse_issue_dataset(.x$body %||% "")),
   dataset_other = map_chr(raw, ~ parse_issue_dataset_other(.x$body %||% "")),
-  description = map_chr(raw, ~ .x$body %||% ""),
+  description = map_chr(raw, ~ parse_issue_description(.x$body %||% "")),
   variables = map_chr(raw, ~ parse_issue_variables(.x$body %||% "")),
   subjects = map_chr(raw, ~ parse_issue_subjects(.x$body %||% "")),
+  num_comments = map_int(raw, ~ .x$comments),
   url = map_chr(raw, ~ .x$html_url %||% "")
 ) |>
   arrange(desc(number)) %>%
@@ -80,3 +100,109 @@ issues <- tibble(
   mutate(date_reported = as.character(as.Date(as.POSIXct(date_reported, tz="UTC", format = "%Y-%m-%d")))) %>%
   mutate(date_closed = as.character(as.Date(as.POSIXct(date_closed, tz="UTC", format = "%Y-%m-%d"))))
 
+
+### ----
+
+#put in excel; write to sharepoint----
+library(openxlsx)
+
+{
+  issue_log <- openxlsx::createWorkbook()
+  
+  # title page -----
+  addWorksheet(issue_log,
+               "Title Page")
+  
+  title_style <- createStyle(
+    fontSize = 20,
+    textDecoration = "bold",
+    halign = "center"
+  )
+  
+  date_style <- createStyle(
+    fontSize = 12,
+    halign = "center"
+  )
+  
+  # ---- Write Content ----
+  
+  # Merge cells for centered layout
+  mergeCells(issue_log, "Title Page", cols = 1:6, rows = 4)
+  mergeCells(issue_log, "Title Page", cols = 1:6, rows = 5)
+  mergeCells(issue_log, "Title Page", cols = 1:6, rows = 7)
+  
+  # Write title
+  writeData(issue_log, "Title Page", repo, startCol = 1, startRow = 4)
+  writeData(issue_log, "Title Page", "Setup Code Issue Log", startCol = 1, startRow = 5)
+  addStyle(issue_log, "Title Page", title_style, rows = 4:7, cols = 1, gridExpand = TRUE)
+  
+  # Write date
+  writeData(issue_log, "Title Page", 
+            paste("Date Rendered:", format(Sys.Date(), "%B %d, %Y")),
+            startCol = 1, startRow = 7)
+  addStyle(issue_log, "Title Page", date_style, rows = 6, cols = 1, gridExpand = TRUE)
+  
+  # Optional: adjust column widths
+  setColWidths(issue_log, "Title Page", cols = 1:6, widths = 15)
+  
+  # Optional: hide gridlines for cleaner look
+  showGridLines(issue_log, "Title Page", showGridLines = FALSE)
+  
+  
+  # body ----
+  
+  table_body_style <- 
+    createStyle(fontSize = 10, 
+                halign = "left",
+                valign = "center",
+                wrapText = T,
+    )
+  
+  header_row_style <- createStyle(
+    fontSize = 12,
+    border = "bottom",
+    borderStyle = "medium",
+    halign = "center",
+    textDecoration = "bold",
+    fgFill = "#CAE2F6"
+  )
+  
+  addWorksheet(issue_log, "Issue Log")
+  
+  writeData(issue_log, 
+            "Issue Log",
+            issues)
+  
+  setColWidths(issue_log, sheet = "Issue Log", cols=1:ncol(issues), widths = c(10, 15, 30, 60, 15, 15, 15, 20, 25, 20, 20, 60, 20, 20, 20, 60))
+  setRowHeights(issue_log, sheet = "Issue Log", rows = 2:nrow(issues), heights = "auto")
+  setRowHeights(issue_log, sheet = "Issue Log", rows = 1, heights = 20)
+  
+  addStyle(issue_log, 
+           sheet = "Issue Log",
+           cols = 1:ncol(issues),
+           rows = 2:(nrow(issues)+1),
+           style = table_body_style, 
+           gridExpand = TRUE)
+  
+  addStyle(issue_log, 
+           sheet = "Issue Log",
+           cols = 1:ncol(issues),
+           rows = 1,
+           style = header_row_style)
+  
+  for (i in seq_len(nrow(issues))) {
+    writeFormula(
+      issue_log,
+      sheet = "Issue Log",
+      x = sprintf('HYPERLINK("%s", "%s")', issues$url[i], issues$url[i]),
+      startCol = 16,
+      startRow = i + 1  
+    )
+  }
+  
+  freezePane(issue_log, sheet = "Issue Log", firstRow = TRUE)
+  
+  
+  
+  saveWorkbook(issue_log, "Test Setup Code Issue Log.xlsx", overwrite = T)
+}
