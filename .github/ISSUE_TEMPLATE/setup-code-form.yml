@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please be sure to fill out this form as accurately as possible and select a label for the relevant dataset
+        Please be sure to fill out this form as accurately as possible and select a label for the resolution status
   - type: textarea
     id: description
     attributes:
@@ -29,14 +29,19 @@ body:
   - type: dropdown
     id: dataset
     attributes:
-      label: Relevant Dataset
+      label: Analytic Dataset
       options:
         - Visits
         - Exits
         - Comorinf
+        - Other, specify
       default: 0
     validations:
       required: true
+- type: input
+    id: other
+    attributes:
+      label: Other/specify:
   - type: upload
     id: screenshots
     attributes:
