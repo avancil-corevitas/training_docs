@@ -42,6 +42,8 @@ body:
     id: other
     attributes:
       label: Other/specify:
+    validations:
+      required: false
   - type: upload
     id: screenshots
     attributes:
